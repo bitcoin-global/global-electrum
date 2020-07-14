@@ -644,7 +644,7 @@ class TestAvailableToSpend(ElectrumTestCase):
         alice_channel.receive_fail_htlc(alice_idx, error_bytes=None)
         self.assertEqual(89984088000, alice_channel.available_to_spend(LOCAL))
         self.assertEqual(500000000000, bob_channel.available_to_spend(LOCAL))
-        # Alice now has gotten all her original balance (5 BTC) back, however,
+        # Alice now has gotten all her original balance (5 BG) back, however,
         # adding a new HTLC at this point SHOULD fail, since if she adds the
         # HTLC and signs the next state, Bob cannot assume she received the
         # FailHTLC, and must assume she doesn't have the necessary balance

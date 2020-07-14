@@ -1,4 +1,4 @@
-Electrum - Lightweight Bitcoin client
+Electrum - Lightweight Bitcoin Global client
 =====================================
 
 ::
@@ -95,7 +95,7 @@ Development version (git clone)
 
 Check out the code from GitHub::
 
-    git clone git://github.com/spesmilo/electrum.git
+    git clone git://github.com/bitcoin-global/global-electrum.git
     cd electrum
     git submodule update --init
 
