@@ -1,10 +1,11 @@
-Electrum - Lightweight Bitcoin Global client
+Electrum Global - Lightweight Bitcoin Global client
 =====================================
 
 ::
 
   Licence: MIT Licence
   Author: Thomas Voegtlin
+  Maintainer: fhivemind
   Language: Python (>= 3.6)
   Homepage: https://electrum.org/
 
@@ -21,14 +22,12 @@ Electrum - Lightweight Bitcoin Global client
 
 
 
-
-
 Getting started
 ===============
 
 (*If you've come here looking to simply run Electrum,* `you may download it here`_.)
 
-.. _you may download it here: https://electrum.org/#download
+.. _you may download it here: https://bitcoin-global.io/#download
 
 Electrum itself is pure Python, and so are most of the required dependencies,
 but not everything. The following sections describe how to run from source, but here
@@ -118,31 +117,8 @@ Finally, to start Electrum::
 Creating Binaries
 =================
 
-Linux (tarball)
----------------
-
-See :code:`contrib/build-linux/sdist/README.md`.
-
-
-Linux (AppImage)
-----------------
-
-See :code:`contrib/build-linux/appimage/README.md`.
-
-
-Mac OS X / macOS
-----------------
-
-See :code:`contrib/osx/README.md`.
-
-
-Windows
--------
-
-See :code:`contrib/build-wine/README.md`.
-
-
-Android
--------
-
-See :code:`contrib/android/Readme.md`.
+* **Linux (tarball)** - :code:`contrib/build-linux/sdist/README.md`
+* **Linux (AppImage)** - :code:`contrib/build-linux/appimage/README.md`
+* **macOS** - :code:`contrib/osx/README.md`
+* **Windows** - :code:`contrib/build-wine/README.md`
+* **Android** - :code:`contrib/android/Readme.md`
