@@ -736,12 +736,12 @@ def time_difference(distance_in_time, include_seconds):
 
 mainnet_block_explorers = {
     'mainnet.bitcoin-global.io': ('https://mainnet.bitcoin-global.io',
-                        {'tx': 'transactions/', 'addr': 'addresses/'}),
+                        {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
     'testnet.bitcoin-global.io': ('https://testnet.bitcoin-global.io',
-                        {'tx': 'transactions/', 'addr': 'addresses/'}),
+                        {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 def block_explorer_info():

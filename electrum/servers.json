@@ -1,5 +1,24 @@
+
 {
-    "electrumx.bitcoin-global.io": {
+    "electrumx.europe.mainnet.bitcoin-global.io": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.4"
+    },
+    "electrumx.us.mainnet.bitcoin-global.io": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.4"
+    },
+    "electrumx.asia.mainnet.bitcoin-global.io": {
+        "pruning": "-",
+        "s": "50002",
+        "t": "50001",
+        "version": "1.4"
+    },
+    "electrumx.australia.mainnet.bitcoin-global.io": {
         "pruning": "-",
         "s": "50002",
         "t": "50001",

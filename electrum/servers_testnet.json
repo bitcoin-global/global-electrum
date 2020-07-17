@@ -1,5 +1,17 @@
 {
-    "test-electrumx.bitcoin-global.io": {
+    "electrumx.us.testnet.bitcoin-global.io": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.4"
+    },
+    "electrumx.europe.testnet.bitcoin-global.io": {
+        "pruning": "-",
+        "s": "51002",
+        "t": "51001",
+        "version": "1.4"
+    },
+    "electrumx.asia.testnet.bitcoin-global.io": {
         "pruning": "-",
         "s": "51002",
         "t": "51001",
