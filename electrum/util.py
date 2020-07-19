@@ -735,12 +735,12 @@ def time_difference(distance_in_time, include_seconds):
         return "over %d years" % (round(distance_in_minutes / 525600))
 
 mainnet_block_explorers = {
-    'mainnet.bitcoin-global.io': ('https://mainnet.bitcoin-global.io',
+    'mainnet.bitcoin-global.io': ('https://mainnet.bitcoin-global.io/',
                         {'tx': 'tx/', 'addr': 'address/'}),
 }
 
 testnet_block_explorers = {
-    'testnet.bitcoin-global.io': ('https://testnet.bitcoin-global.io',
+    'testnet.bitcoin-global.io': ('https://testnet.bitcoin-global.io/',
                         {'tx': 'tx/', 'addr': 'address/'}),
 }
 
