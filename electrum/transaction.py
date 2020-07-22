@@ -86,7 +86,8 @@ class MissingTxInputAmount(Exception):
     pass
 
 
-SIGHASH_ALL = 1
+SIGHASH_ALL    = 1
+SIGHASH_FORKID = 0x40
 
 
 class TxOutput:
@@ -699,6 +700,18 @@ class Transaction:
         elif addrtype == constants.net.ADDRTYPE_P2SH:
             return 'p2wpkh-p2sh'
         raise Exception(f'unrecognized address: {repr(addr)}')
+
+    @classmethod
+    def get_sighash(cls):
+        return SIGHASH_ALL | SIGHASH_FORKID
+
+    @classmethod
+    def get_forkid(cls):
+        return 78
+
+    @classmethod
+    def get_hash_type(cls):
+        return cls.get_sighash() | (cls.get_forkid() << 8)
 
     @classmethod
     def input_script(self, txin: TxInput, *, estimate_size=False) -> str:
@@ -1769,10 +1782,7 @@ class PartialTransaction(Transaction):
         inputs = self.inputs()
         outputs = self.outputs()
         txin = inputs[txin_index]
-        sighash = txin.sighash if txin.sighash is not None else SIGHASH_ALL
-        if sighash != SIGHASH_ALL:
-            raise Exception("only SIGHASH_ALL signing is supported!")
-        nHashType = int_to_hex(sighash, 4)
+        nHashType = int_to_hex(self.get_hash_type(), 4)
         preimage_script = self.get_preimage_script(txin)
         if self.is_segwit_input(txin):
             if bip143_shared_txdigest_fields is None:
@@ -1817,7 +1827,7 @@ class PartialTransaction(Transaction):
                                                        bip143_shared_txdigest_fields=bip143_shared_txdigest_fields)))
         privkey = ecc.ECPrivkey(privkey_bytes)
         sig = privkey.sign_transaction(pre_hash)
-        sig = bh2u(sig) + '01'  # SIGHASH_ALL
+        sig = bh2u(sig) + int_to_hex(self.get_sighash(), 1)
         return sig
 
     def is_complete(self) -> bool:
