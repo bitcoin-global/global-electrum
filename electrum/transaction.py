@@ -1784,7 +1784,7 @@ class PartialTransaction(Transaction):
         txin = inputs[txin_index]
         nHashType = int_to_hex(self.get_hash_type(), 4)
         preimage_script = self.get_preimage_script(txin)
-        if self.is_segwit_input(txin):
+        if True or self.is_segwit_input(txin): # force segwit
             if bip143_shared_txdigest_fields is None:
                 bip143_shared_txdigest_fields = self._calc_bip143_shared_txdigest_fields()
             hashPrevouts = bip143_shared_txdigest_fields.hashPrevouts
@@ -1879,7 +1879,8 @@ class PartialTransaction(Transaction):
         for i, txin in enumerate(self.inputs()):
             pubkeys = [pk.hex() for pk in txin.pubkeys]
             sig = signatures[i]
-            if bfh(sig) in list(txin.part_sigs.values()):
+            sig_final = sig + int_to_hex(self.get_sighash(), 1)
+            if bfh(sig_final) in list(txin.part_sigs.values()):
                 continue
             pre_hash = sha256d(bfh(self.serialize_preimage(i)))
             sig_string = ecc.sig_string_from_der_sig(bfh(sig[:-2]))
@@ -1896,8 +1897,8 @@ class PartialTransaction(Transaction):
                     except Exception:
                         _logger.exception('')
                         continue
-                    _logger.info(f"adding sig: txin_idx={i}, signing_pubkey={pubkey_hex}, sig={sig}")
-                    self.add_signature_to_txin(txin_idx=i, signing_pubkey=pubkey_hex, sig=sig)
+                    _logger.info(f"adding sig: txin_idx={i}, signing_pubkey={pubkey_hex}, sig={sig_final}")
+                    self.add_signature_to_txin(txin_idx=i, signing_pubkey=pubkey_hex, sig=sig_final)
                     break
         # redo raw
         self.invalidate_ser_cache()
