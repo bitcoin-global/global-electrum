@@ -67,7 +67,7 @@ This creates both a folder named Electrum.app and the .dmg file.
 If you want the binaries codesigned for MacOS and notarised by Apple's central server,
 provide these env vars to the `make_osx` script:
 
-    CODESIGN_CERT="Developer ID Application: Electrum Technologies GmbH (L6P37P7P56)" \
+    CODESIGN_CERT="Developer ID Application: Bitcoin Global (L6P37P7P56)" \
     APPLE_ID_USER="me@email.com" \
     APPLE_ID_PASSWORD="1234" \
     ./contrib/osx/make_osx

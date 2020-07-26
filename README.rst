@@ -7,7 +7,7 @@ Electrum Global - Lightweight Bitcoin Global client
   Author: Thomas Voegtlin
   Maintainer: fhivemind
   Language: Python (>= 3.6)
-  Homepage: https://electrum.org/
+  Homepage: https://bitcoin-global.io/
 
 
 .. image:: https://travis-ci.org/spesmilo/electrum.svg?branch=master

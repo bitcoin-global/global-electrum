@@ -18,8 +18,8 @@ PKG2APPIMAGE_COMMIT="eb8f3acdd9f11ab19b78f5cb15daa772367daf15"
 SQUASHFSKIT_COMMIT="ae0d656efa2d0df2fcac795b6823b44462f19386"
 
 
-VERSION=`git describe --tags --dirty --always`
-APPIMAGE="$DISTDIR/electrum-$VERSION-x86_64.AppImage"
+VERSION=`git describe --tags --always`
+APPIMAGE="$DISTDIR/electrum-global-$VERSION-x86_64.AppImage"
 
 . "$CONTRIB"/build_tools_util.sh
 
