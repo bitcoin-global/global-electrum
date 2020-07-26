@@ -28,7 +28,6 @@ for f in $(ls *.exe); do
       -key "$KEY_FILE" \
       -n "Electrum Global" \
       -i "https://bitcoin-global.io/" \
-      -t "http://timestamp.digicert.com/" \
       -in "$f" \
       -out "../signed/$f"
     ls ../signed/$f -lah
