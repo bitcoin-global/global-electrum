@@ -315,16 +315,16 @@ class Blockchain(Logger):
     def verify_chunk(self, index: int, data: bytes) -> None:
         num = len(data) // HEADER_SIZE
         start_height = index * 2016
-        prev_hash = self.get_hash(start_height - 1)
-        target = self.get_target(index-1)
         for i in range(num):
             height = start_height + i
+            target = self.get_target(height)
+            prev_hash = self.get_hash(start_height - 1)
             try:
                 expected_header_hash = self.get_hash(height)
             except MissingHeader:
                 expected_header_hash = None
             raw_header = data[i*HEADER_SIZE : (i+1)*HEADER_SIZE]
-            header = deserialize_header(raw_header, index*2016 + i)
+            header = deserialize_header(raw_header, start_height + i)
             self.verify_header(header, prev_hash, target, expected_header_hash)
             prev_hash = hash_header(header)
 
@@ -519,7 +519,68 @@ class Blockchain(Logger):
                 raise MissingHeader(height)
             return hash_header(header)
 
-    def get_target(self, index: int) -> int:
+    def get_header(self, height, headers=None):
+        if headers is None:
+            headers = {}
+        return headers[height] if height in headers else self.read_header(height)
+
+    def get_target(self, height: int) -> int:
+        if height < constants.net.BTG_HEIGHT:
+            new_target = self.get_legacy_target(height // 2016 - 1)
+        # Premine
+        elif height < constants.net.BTG_HEIGHT + constants.net.PREMINE_SIZE:
+            new_target = constants.net.POW_LIMIT
+        # Zawy LWMA
+        else:
+            new_target = self.get_lwma_target(height, None, constants.net.LWMA_ADJUST_WEIGHT,
+                                              constants.net.LWMA_MIN_DENOMINATOR)
+        return new_target
+
+    def get_lwma_target(self, height, headers, weight, denominator):
+        cur = self.get_header(height, headers)
+        last_height = (height - 1)
+        last = self.get_header(last_height, headers)
+
+        # Special testnet handling
+        if constants.net.TESTNET and cur.get('timestamp') > last.get('timestamp') + constants.net.POW_TARGET_SPACING * 2:
+            new_target = constants.net.POW_LIMIT
+        else:
+            total = 0
+            t = 0
+            j = 0
+
+            assert (height - constants.net.LWMA_AVERAGING_WINDOW) > 0
+
+            ts = 6 * constants.net.POW_TARGET_SPACING
+
+            # Loop through N most recent blocks.  "< height", not "<=".
+            # height-1 = most recently solved block
+            for i in range(height - constants.net.LWMA_AVERAGING_WINDOW, height):
+                cur = self.get_header(i, headers)
+                prev_height = (i - 1)
+                prev = self.get_header(prev_height, headers)
+
+                solvetime = cur.get('timestamp') - prev.get('timestamp')
+
+                if constants.net.LWMA_SOLVETIME_LIMITATION and solvetime > ts:
+                    solvetime = ts
+
+                j += 1
+                t += solvetime * j
+                total += self.bits_to_target(cur.get('bits')) // (weight * constants.net.LWMA_AVERAGING_WINDOW * constants.net.LWMA_AVERAGING_WINDOW)
+
+            # Keep t reasonable in case strange solvetimes occurred.
+            if t < constants.net.LWMA_AVERAGING_WINDOW * weight // denominator:
+                t = constants.net.LWMA_AVERAGING_WINDOW * weight // denominator
+
+            new_target = t * total
+
+            if new_target > constants.net.POW_LIMIT:
+                new_target = constants.net.POW_LIMIT
+
+        return new_target
+
+    def get_legacy_target(self, index: int) -> int:
         # compute target from chunk x, used in chunk x+1
         if constants.net.TESTNET:
             return 0
@@ -567,8 +628,7 @@ class Blockchain(Logger):
 
     def chainwork_of_header_at_height(self, height: int) -> int:
         """work done by single header at given height"""
-        chunk_idx = height // 2016 - 1
-        target = self.get_target(chunk_idx)
+        target = self.get_target(height)
         work = ((2 ** 256 - target - 1) // (target + 1)) + 1
         return work
 
@@ -614,7 +674,7 @@ class Blockchain(Logger):
         if prev_hash != header.get('prev_block_hash'):
             return False
         try:
-            target = self.get_target(height // 2016 - 1)
+            target = self.get_target(height)
         except MissingHeader:
             return False
         try:
@@ -637,10 +697,16 @@ class Blockchain(Logger):
     def get_checkpoints(self):
         # for each chunk, store the hash of the last block and the target after the chunk
         cp = []
-        n = self.height() // 2016
+        diff_adj = difficulty_adjustment_interval()
+        n = self.height() // diff_adj
         for index in range(n):
-            h = self.get_hash((index+1) * 2016 -1)
-            target = self.get_target(index)
+            height = (index + 1) * diff_adj
+
+            if is_post_btg_fork(height):
+                break
+
+            h = self.get_hash(height - 1)
+            target = self.get_target(height)
             cp.append((h, target))
         return cp
 

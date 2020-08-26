@@ -39,6 +39,15 @@ if TYPE_CHECKING:
     from .network import Network
 
 
+def is_post_btg_fork(height):
+    return height >= constants.net.BTG_HEIGHT
+
+def needs_retarget(height):
+    return is_post_btg_fork(height) or (height % difficulty_adjustment_interval() == 0)
+
+def difficulty_adjustment_interval():
+    return constants.net.POW_TARGET_TIMESPAN_LEGACY // constants.net.POW_TARGET_SPACING
+
 ################################## transactions
 
 COINBASE_MATURITY = 100

@@ -64,6 +64,7 @@ class BitcoinMainnet(AbstractNet):
     ADDRTYPE_P2PKH = 38
     ADDRTYPE_P2SH = 23
     SEGWIT_HRP = "glob"
+    
     GENESIS = "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
     DEFAULT_PORTS = {'t': '50001', 's': '50002'}
     DEFAULT_SERVERS = read_json('servers.json', {})
@@ -93,6 +94,17 @@ class BitcoinMainnet(AbstractNet):
         #'lseed.bitcoinstats.com.',
     ]
 
+    BTG_HEIGHT   = 638592
+    PREMINE_SIZE = 100
+    BTG_REWARD   = 1000
+    POW_LIMIT    = 0x00000000ffff0000000000000000000000000000000000000000000000000000
+
+    LWMA_AVERAGING_WINDOW = 45
+    LWMA_ADJUST_WEIGHT    = 13500
+    LWMA_MIN_DENOMINATOR  = 10
+    POW_TARGET_SPACING    = 10 * 60
+    POW_TARGET_TIMESPAN_LEGACY = 14 * 24 * 60 * 60
+    LWMA_SOLVETIME_LIMITATION = True
 
 class BitcoinTestnet(AbstractNet):
 
@@ -128,6 +140,18 @@ class BitcoinTestnet(AbstractNet):
         #'test.nodes.lightning.directory.',  # times out.
         #'lseed.bitcoinstats.com.',  # ignores REALM byte and returns mainnet peers...
     ]
+
+    BTG_HEIGHT   = 1780318
+    PREMINE_SIZE = 50
+    BTG_REWARD   = 1000
+    POW_LIMIT    = 0x00000000ffff0000000000000000000000000000000000000000000000000000
+
+    LWMA_AVERAGING_WINDOW = 45
+    LWMA_ADJUST_WEIGHT    = 13500
+    LWMA_MIN_DENOMINATOR  = 10
+    POW_TARGET_SPACING    = 10 * 60
+    POW_TARGET_TIMESPAN_LEGACY = 14 * 24 * 60 * 60
+    LWMA_SOLVETIME_LIMITATION = False
 
 
 class BitcoinRegtest(BitcoinTestnet):
